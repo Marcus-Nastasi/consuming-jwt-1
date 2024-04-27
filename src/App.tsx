@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Task from "./interfaces/Tasks/Tasks";
+import Login from "./interfaces/Login/Login";
 
 export default function App() {
    const [ token, setToken ] = useState<string>('');
@@ -18,8 +19,8 @@ export default function App() {
          headers: new Headers({ 'content-type': 'application/json' })
       };
 
-      const req = await fetch(url, options);
-      const res = await req.json();
+      const req: Response = await fetch(url, options);
+      const res: Login = await req.json();
 
       setToken(res.token);
    };
@@ -27,9 +28,10 @@ export default function App() {
    async function handleGetApi(e: any): Promise<void> {
       e.preventDefault();
       
-      const response = await fetch('http://localhost:3001/api', {
+      const response: Response = await fetch('http://localhost:3001/api', {
          headers: new Headers({ 'x-access-token': token })
       });
+      
       const converted: Array<Task> = await response.json();
 
       setResp(converted);

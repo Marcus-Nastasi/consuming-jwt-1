@@ -1,5 +1,5 @@
 export default interface Task {
-   id: BigInteger,
+   id: Number,
    description: String
 };
 
