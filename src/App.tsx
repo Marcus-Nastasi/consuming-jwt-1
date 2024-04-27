@@ -1,21 +1,11 @@
 import { useState } from "react";
+import Task from "./interfaces/Tasks/Tasks";
 
 export default function App() {
-   const [ token, setToken ] = useState('');
-   const [ resp, setResp ] = useState([]);
+   const [ token, setToken ] = useState<string>('');
+   const [ resp, setResp ] = useState<Array<Task>>([]);
 
-   async function handleSubmit(e: any): Promise<void> {
-      e.preventDefault();
-      
-      const response = await fetch('http://localhost:3001/api', {
-         headers: new Headers({ 'x-access-token': token })
-      });
-      const converted = await response.json();
-
-      setResp(converted);
-   };
-
-   async function postToToken(e: any): Promise<void> {
+   async function handleTokenSubmit(e: any): Promise<void> {
       e.preventDefault();
 
       const user: any = document.getElementById('user');
@@ -25,20 +15,31 @@ export default function App() {
       const options: object = {
          method: 'post',
          body: JSON.stringify({ user: user.value, password: pass.value }),
-         headers: new Headers({'content-type': 'application/json', })
+         headers: new Headers({ 'content-type': 'application/json' })
       };
 
       const req = await fetch(url, options);
       const res = await req.json();
 
       setToken(res.token);
-   }
+   };
+
+   async function handleGetApi(e: any): Promise<void> {
+      e.preventDefault();
+      
+      const response = await fetch('http://localhost:3001/api', {
+         headers: new Headers({ 'x-access-token': token })
+      });
+      const converted: Array<Task> = await response.json();
+
+      setResp(converted);
+   };
 
    return (
       <>
          <section>
 
-            <form method="post" action="http://localhost:3001/login">
+            <form>
 
                <label htmlFor="user">Login</label>
                <input type="text" name="user" id="user" />
@@ -46,11 +47,11 @@ export default function App() {
                <label htmlFor="password">Password</label>
                <input type="password" name="password" id="password" />
 
-               <button onClick={postToToken} type="submit">send</button>
+               <button onClick={handleTokenSubmit} type="submit">send</button>
 
             </form>
 
-            <button onClick={handleSubmit}>API</button>
+            <button onClick={handleGetApi}>API</button>
 
             {resp.map((r: any) => <p key={r.id}> {r.description} </p>)}
 
