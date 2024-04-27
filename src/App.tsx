@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { StrictMode, useState } from "react";
 
 export default function App() {
    const [ responses, setResponses ] = useState([]);
@@ -9,15 +9,16 @@ export default function App() {
       const inputUser: any = document.getElementById('user');
       const inputPassword: any = document.getElementById('password');
 
-      const url: string = "http://localhost:3001/login";
-      const config: object = {
-         method: "post", 
-         body: JSON.stringify({ user: inputUser.value, password: inputPassword.value })
-      };
+      const url: string = "http://localhost:3001/api";
+      // const config: object = {
+      //    method: "post", 
+      //    body: 
+      // };
 
       try {
-         const request = await fetch(url, config);
-         const response = await request.json();
+         const request: Response = await fetch(url)
+         const response: any = await request.json();
+         setResponses(response);
          console.log(response);
       } catch(e) {
          console.log("error: " + e)
@@ -28,7 +29,7 @@ export default function App() {
       <>
          <section>
 
-            <form onSubmit={handleSubmit} method="post">
+            <form method="post" action="http://localhost:3001/login">
 
                <label htmlFor="user">Login</label>
                <input type="text" name="user" id="user" />
@@ -36,9 +37,11 @@ export default function App() {
                <label htmlFor="password">Password</label>
                <input type="password" name="password" id="password" />
 
-               <button type="submit">send</button>
+               <button  type="submit">send</button>
 
             </form>
+
+            <button onClick={handleSubmit}>API</button>
 
          </section>
       </>
