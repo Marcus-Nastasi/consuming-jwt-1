@@ -71,12 +71,10 @@ export default function App() {
                {resp.map((r: Task) => <p key={String(r.id)}> {r.description} </p>)}
             </section>
 
-            {
-               fetchError ?
+            {fetchError ?
                <div style={errorBox}>
                   <p> {errorMessage} </p>
-               </div> :
-               ''
+               </div> : ''
             }
             
          </section>
@@ -91,7 +89,8 @@ const topSectionStyle: object = {
    alignItems: 'center',
    backgroundColor: '#0093E9',
    backgroundImage: 'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
-   height: '100vh'
+   height: '100vh',
+   fontFamily: 'sans-serif'
 };
 
 const middleSectionStyle: object = {
@@ -114,7 +113,8 @@ const formStyle: object = {
 };
 
 const labelStyle: object = {
-   color: 'black'
+   color: 'black',
+   fontFamily: 'sans-serif'
 };
 
 const inputStyle: object = {
@@ -142,6 +142,8 @@ const errorBox: object = {
    color: 'white',
    textAlign: 'center',
    fontSize: '2rem',
+   fontWeight: 'bold',
+   fontFamily: 'sans-serif',
    borderRadius: '0.8rem'
 };
 
