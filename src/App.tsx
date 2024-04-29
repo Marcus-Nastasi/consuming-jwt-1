@@ -5,13 +5,13 @@ import Login from "./interfaces/Login/Login";
 export default function App() {
    const [ token, setToken ] = useState<string>('');
    const [ resp, setResp ] = useState<Array<Task>>([]);
+   const [ fetchError, setFetchError ] = useState<boolean>(false);
+   const [ errorMessage, setErrorMessage ] = useState<string>('');
 
    async function handleTokenSubmit(e: any): Promise<void> {
       e.preventDefault();
 
-      const user: any = document.getElementById('user');
-      const pass: any = document.getElementById('password');
-
+      const [ user, pass ]: any = [ document.getElementById('user'), document.getElementById('password') ];
       const url: string = 'http://localhost:3001/login';
       const options: object = {
          method: 'post',
@@ -19,27 +19,40 @@ export default function App() {
          headers: new Headers({ 'content-type': 'application/json' })
       };
 
-      const req: Response = await fetch(url, options);
-      const res: Login = await req.json();
-
-      setToken(res.token);
+      try {
+         const req: Response = await fetch(url, options);
+         const res: Login = await req.json();
+         setToken(res.token);
+      } catch(e: any) {
+         handleError(e.message);
+      }
    };
 
    async function handleGetApi(e: any): Promise<void> {
       e.preventDefault();
       
-      const response: Response = await fetch('http://localhost:3001/api', {
-         headers: new Headers({ 'x-access-token': token })
-      });
+      try {
+         const options: object = { headers: new Headers({ 'x-access-token': token }) };
+         const req: Response = await fetch('http://localhost:3001/api', options);
+         const res: Array<Task> = await req.json();
+   
+         setResp(res);
+      } catch(e: any) {
+         handleError(e.message);
+      }
+   };
 
-      const converted: Array<Task> = await response.json();
-
-      setResp(converted);
+   const handleError = (e: any) => {
+      if(e) {
+         setErrorMessage(e);
+         setFetchError(true);
+         setTimeout(() => setFetchError(false), 1800);
+      };
    };
 
    return (
       <>
-         <section style={topSectionStyle}>
+         <section id="topSec" style={topSectionStyle}>
             <section style={middleSectionStyle}>
                <form style={formStyle}>
 
@@ -57,6 +70,15 @@ export default function App() {
 
                {resp.map((r: Task) => <p key={String(r.id)}> {r.description} </p>)}
             </section>
+
+            {
+               fetchError ?
+               <div style={errorBox}>
+                  <p> {errorMessage} </p>
+               </div> :
+               ''
+            }
+            
          </section>
       </>
   )
@@ -64,6 +86,7 @@ export default function App() {
 
 const topSectionStyle: object = {
    display: 'flex',
+   flexDirection: 'column-reverse',
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#0093E9',
@@ -107,5 +130,18 @@ const formButton: object = {
    cursor: 'pointer',
    alignSelf: 'center',
    borderRadius: '0.5rem'
+};
+
+const errorBox: object = {
+   width: '30%',
+   padding: '2rem',
+   position: 'fixed',
+   top: '2.3rem',
+   backgroundColor: '#ff5576',
+   backgroundImage: 'linear-gradient(90deg, #ff5576 0%, #ff1655 55%, #ff5576 100%)',     
+   color: 'white',
+   textAlign: 'center',
+   fontSize: '2rem',
+   borderRadius: '0.8rem'
 };
 
