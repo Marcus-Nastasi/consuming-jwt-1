@@ -68,7 +68,9 @@ export default function App() {
 
                <button style={formButton} onClick={handleGetApi}>API</button>
 
-               {resp.map((r: Task) => <p key={String(r.id)}> {r.description} </p>)}
+               <div style={listStyle}>
+                  {resp.map((r: Task) => <p key={String(r.id)}> {r.description} </p>)}
+               </div>
             </section>
 
             {fetchError ?
@@ -99,7 +101,8 @@ const middleSectionStyle: object = {
    backgroundColor: '#8EC5FC',
    backgroundImage: 'linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%)',
    padding: '2rem',
-   height: '50vh',
+   minHeight: '50vh',
+   maxHeight: 'fit-content',
    width: '40%',
    borderRadius: '2rem'
 };
@@ -145,5 +148,12 @@ const errorBox: object = {
    fontWeight: 'bold',
    fontFamily: 'sans-serif',
    borderRadius: '0.8rem'
+};
+
+const listStyle: object = {
+   padding: '2rem',
+   fontSize: '2rem',
+   color: 'white',
+   fontWheigth: 'bold'
 };
 
