@@ -30,12 +30,12 @@ export default function App() {
 
    async function handleGetApi(e: any): Promise<void> {
       e.preventDefault();
+
+      const options: object = { headers: new Headers({ 'x-access-token': token }) };
       
       try {
-         const options: object = { headers: new Headers({ 'x-access-token': token }) };
          const req: Response = await fetch('http://localhost:3001/api', options);
          const res: Array<Task> = await req.json();
-   
          setResp(res);
       } catch(e: any) {
          handleError(e.message);
