@@ -42,7 +42,7 @@ export default function App() {
       }
    };
 
-   const handleError = (e: any) => {
+   function handleError(e: any) {
       if(e) {
          setErrorMessage(e);
          setFetchError(true);
